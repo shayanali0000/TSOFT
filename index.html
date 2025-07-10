@@ -90,6 +90,94 @@
       color: #999;
       cursor: pointer;
     }
+
+    body {
+      font-family: 'Open Sans', Arial, Helvetica, sans-serif;
+      letter-spacing: 0.5px;
+      word-spacing: 1px;
+      background: linear-gradient(to bottom right, #0f172a, #1e293b, #2a2e5a);
+      color: #e2e8f0;
+      margin: 0;
+      padding: 0;
+    }
+    .chatbot-container {
+      position: fixed;
+      bottom: 90px;
+      right: 20px;
+      background-color: #e5ddd5;
+      color: #1e293b;
+      border-radius: 10px;
+      box-shadow: 0 0 15px rgba(0,0,0,0.3);
+      width: 320px;
+      z-index: 3000;
+      display: none;
+      opacity: 0;
+      transform: translateY(20px);
+      transition: all 0.3s ease-in-out;
+      display: flex;
+      flex-direction: column;
+    }
+    .chatbot-container.active {
+      display: flex;
+      opacity: 1;
+      transform: translateY(0);
+    }
+    .chatbot-container.inactive {
+      opacity: 0;
+      transform: translateY(20px);
+    }
+    .chatbot-header {
+      background: #075e54;
+      color: white;
+      padding: 0.7em;
+      font-weight: bold;
+      text-align: center;
+      border-radius: 10px 10px 0 0;
+    }
+    .chatbot-messages {
+      flex: 1;
+      padding: 1em;
+      overflow-y: auto;
+      max-height: 250px;
+    }
+    .bot-message, .user-message {
+      margin: 0.4em 0;
+      max-width: 80%;
+      padding: 0.6em 1em;
+      border-radius: 15px;
+      font-size: 0.95em;
+      line-height: 1.4;
+      word-wrap: break-word;
+    }
+    .bot-message {
+      background-color: #dcf8c6;
+      align-self: flex-start;
+    }
+    .user-message {
+      background-color: #ffffff;
+      align-self: flex-end;
+    }
+    .chatbot-buttons {
+      padding: 0.8em;
+      border-top: 1px solid #ccc;
+      background: #f0f0f0;
+      display: flex;
+      flex-direction: column;
+      gap: 0.5em;
+    }
+    .chatbot-buttons button {
+      padding: 0.5em;
+      background: #25d366;
+      color: white;
+      border: none;
+      border-radius: 5px;
+      font-weight: bold;
+      cursor: pointer;
+      transition: background 0.2s;
+    }
+    .chatbot-buttons button:hover {
+      background: #1ebe5d;
+    }
     .chatbot-toggle {
       position: fixed;
       bottom: 20px;
@@ -107,46 +195,48 @@
       color: white;
       font-size: 1.5em;
     }
-    .chatbot-container {
-      position: fixed;
-      bottom: 90px;
-      right: 20px;
-      background-color: #1e293b;
-      color: white;
-      border-radius: 10px;
-      box-shadow: 0 0 15px rgba(0,0,0,0.3);
-      padding: 1em;
-      z-index: 3000;
-      display: none;
-      width: 280px;
-    }
-    .chatbot-container h3 {
-      color: #38bdf8;
-      text-align: center;
-      margin-bottom: 0.5em;
-    }
-    .chatbot-container button {
-      background: #334155;
-      border: none;
-      color: white;
-      padding: 0.5em 1em;
-      border-radius: 6px;
-      margin: 0.3em 0;
-      cursor: pointer;
-      width: 100%;
-    }
-    .chatbot-response {
-      margin-top: 1em;
-      background: #0f172a;
-      padding: 0.5em;
-      border-radius: 6px;
-      font-size: 0.9em;
-    }
   </style>
 </head>
 <body>
-<header style="position: fixed; top: 0; left: 0; width: 100%; background: #0f172a; padding: 1em 2em; display: flex; align-items: center; justify-content: flex-start; z-index: 1000;">
-  <div class="logo" style="font-size: 1.8em; font-weight: bold; color: #38bdf8; letter-spacing: 1px;">TSOFT</div>
+  </style>
+</head>
+<body>
+<header style="position: fixed; top: 0; left: 0; width: 100%; background: linear-gradient(to right, #0f172a, #1e1b3a); padding: 1em 2em; display: flex; align-items: center; justify-content: flex-start; z-index: 1000; overflow: hidden;">
+
+  <!-- Floating blobs -->
+  <div style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; z-index: 0; pointer-events: none;">
+    <div class="blob" style="--x: 10%; --y: 20%; --delay: 0s;"></div>
+    <div class="blob" style="--x: 60%; --y: 50%; --delay: 1s;"></div>
+    <div class="blob" style="--x: 30%; --y: 10%; --delay: 3s;"></div>
+  </div>
+
+  <!-- Logo -->
+  <div class="logo" style="position: relative; z-index: 1; font-size: 1.8em; font-weight: bold; color: #38bdf8; letter-spacing: 1px;">TSOFT</div>
+
+  <!-- Same animation styles -->
+  <style>
+    .blob {
+      position: absolute;
+      width: 200px;
+      height: 200px;
+      background: radial-gradient(circle, rgba(255, 255, 255, 0.07) 0%, transparent 70%);
+      filter: blur(50px);
+      border-radius: 50%;
+      animation: floatBlobs 18s ease-in-out infinite;
+      left: var(--x);
+      top: var(--y);
+      animation-delay: var(--delay);
+    }
+
+    @keyframes floatBlobs {
+      0%, 100% {
+        transform: translate(0, 0) scale(1);
+      }
+      50% {
+        transform: translate(-30px, -20px) scale(1.15);
+      }
+    }
+  </style>
 </header>
 
 <section id="services-overview" style="margin-top: 80px; text-align:center; padding: 6em 2em; background: transparent; box-shadow: none;">
@@ -169,6 +259,7 @@
   <div class="floating-robot"></div>
   <div class="floating-robot"></div>
   <div class="floating-robot"></div>
+  <div class="floating-robot"></div>
 </section>
 
 <!-- Chatbot Toggle Button -->
@@ -178,12 +269,17 @@
 
 <!-- Chatbot Box -->
 <div class="chatbot-container" id="chatbot">
-  <h3>TSOFT Bot</h3>
-  <button onclick="showResponse('about')">🤖 About Us</button>
-  <button onclick="showResponse('contact')">📱 Contact Info</button>
-  <button onclick="showResponse('why')">💡 Why Us?</button>
-  <div id="chatbotResponse" class="chatbot-response"></div>
+  <div class="chatbot-header">TSOFT BOT</div>
+  <div class="chatbot-messages" id="chatbotMessages">
+    <div class="bot-message">Hi! 👋 How can I help you today?</div>
+  </div>
+  <div class="chatbot-buttons">
+    <button onclick="sendMessage('About Us')">About Us</button>
+    <button onclick="sendMessage('Contact Info')">Contact Info</button>
+    <button onclick="sendMessage('Why Us?')">Why Us?</button>
+  </div>
 </div>
+
 
 <!-- Modals -->
 <div id="presenceModal" class="modal-overlay" onclick="closeModal(event, 'presenceModal')">
@@ -316,28 +412,62 @@
       color: #334155;
       text-shadow: 0 0 4px rgba(14,165,233,0.05);
     ">
-      Want to automate customer calls too? We've got something smart in the works. 😉
+      Want to automate customer calls too? We've got something smart in the works.
     </p>
     <h3 style="
       font-size: 1.6em;
       margin-top: 1.5em;
       color: #0ea5e9;
       text-shadow: 0 0 12px rgba(14,165,233,0.4), 0 0 18px rgba(14,165,233,0.2);
-    ">✨ Coming Soon ✨</h3>
+    ">Coming Soon!</h3>
   </div>
 </section>
 
 
 <!-- Remaining sections stay untouched -->
 
+<section style="position: relative; overflow: hidden; background: linear-gradient(to right, #0f172a, #1e1b3a); color: white; padding: 4em 2em; text-align: center;">
 
-<section style="background: #0f172a; color: white; padding: 4em 2em; text-align: center;">
-  <h2>Contact & Support</h2>
-  <p>Ready to automate your business? Get in touch with us today!</p>
-  <a href="mailto:tsoftonicpakistan@gmail.com" style="display: inline-block; margin: 10px; padding: 10px 20px; background-color: #ea4335; color: white; text-decoration: none; border-radius: 6px;">Send Email</a>
-  <a href="https://wa.me/923350303770" target="_blank" style="display: inline-block; margin: 10px; padding: 10px 20px; background-color: #25D366; color: white; text-decoration: none; border-radius: 6px;">Chat Now</a>
-  <p style="margin-top: 2em;">Email: tsoftonicpakistan@gmail.com<br>Phone: 0335-0303770</p>
+  <!-- Moving Blobs -->
+  <div style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; z-index: 0; pointer-events: none;">
+    <div class="blob" style="--x: 20%; --y: 30%; --delay: 0s;"></div>
+    <div class="blob" style="--x: 70%; --y: 60%; --delay: 2s;"></div>
+    <div class="blob" style="--x: 40%; --y: 80%; --delay: 4s;"></div>
+  </div>
+
+  <!-- Content -->
+  <h2 style="position: relative; z-index: 1;">Contact & Support</h2>
+  <p style="position: relative; z-index: 1;">Ready to automate your business? Get in touch with us today!</p>
+  <a href="mailto:tsoftonicpakistan@gmail.com" style="position: relative; z-index: 1; display: inline-block; margin: 10px; padding: 10px 20px; background-color: #ea4335; color: white; text-decoration: none; border-radius: 6px;">Send Email</a>
+  <a href="https://wa.me/923350303770" target="_blank" style="position: relative; z-index: 1; display: inline-block; margin: 10px; padding: 10px 20px; background-color: #25D366; color: white; text-decoration: none; border-radius: 6px;">Chat Now</a>
+  <p style="position: relative; z-index: 1; margin-top: 2em;">Email: tsoftonicpakistan@gmail.com<br>Phone: 0335-0303770</p>
+
+  <!-- Add these styles in a <style> tag -->
+  <style>
+    .blob {
+      position: absolute;
+      width: 300px;
+      height: 300px;
+      background: radial-gradient(circle, rgba(255, 255, 255, 0.07) 0%, transparent 70%);
+      filter: blur(60px);
+      border-radius: 50%;
+      animation: floatBlobs 20s ease-in-out infinite;
+      left: var(--x);
+      top: var(--y);
+      animation-delay: var(--delay);
+    }
+
+    @keyframes floatBlobs {
+      0%, 100% {
+        transform: translate(0, 0) scale(1);
+      }
+      50% {
+        transform: translate(-50px, -30px) scale(1.2);
+      }
+    }
+  </style>
 </section>
+
 
 <section style="background: #1e293b; color: #cbd5e1; padding: 2em; text-align: center;">
   <p>Most businesses see results within the first month of automation</p>
@@ -361,23 +491,46 @@ function closeModal(event, id) {
   const modal = document.getElementById(id);
   if (modal) modal.style.display = 'none';
 }
+
 function toggleChatbot() {
   const chatbot = document.getElementById('chatbot');
-  chatbot.style.display = chatbot.style.display === 'block' ? 'none' : 'block';
-}
-function showResponse(type) {
-  const res = document.getElementById('chatbotResponse');
-  let message = "";
-  if (type === 'about') {
-    message = "We're TSOFT — your one-stop automation agency for AI-powered growth and smart digital presence.";
-  } else if (type === 'contact') {
-    message = "📧 Email: tsoftonicpakistan@gmail.com<br>📱 WhatsApp: 0335-0303770";
-  } else if (type === 'why') {
-    message = "We focus on results, automation, and quality. We simplify growth with expert tech, not buzzwords.";
+  if (chatbot.classList.contains('active')) {
+    chatbot.classList.remove('active');
+    chatbot.classList.add('inactive');
+    setTimeout(() => chatbot.style.display = 'none', 300);
+  } else {
+    chatbot.classList.remove('inactive');
+    chatbot.style.display = 'flex';
+    setTimeout(() => chatbot.classList.add('active'), 10);
   }
-  res.innerHTML = message;
 }
+
+function sendMessage(type) {
+  const msgBox = document.getElementById('chatbotMessages');
+  const userMsg = document.createElement('div');
+  userMsg.className = 'user-message';
+  userMsg.innerText = type;
+  msgBox.appendChild(userMsg);
+
+  const botMsg = document.createElement('div');
+  botMsg.className = 'bot-message';
+  let message = "";
+  if (type === 'About Us') {
+    message = "We're TSOFT — your one-stop automation agency for AI-powered growth and smart digital presence.";
+  } else if (type === 'Contact Info') {
+    message = "📧 Email: tsoftonicpakistan@gmail.com\n📱 WhatsApp: 0335-0303770";
+  } else if (type === 'Why Us?') {
+    message = "We focus on results, automation, and quality. We simplify growth with expert tech, not buzzwords.";
+  } else {
+    message = "Sorry, I didn't understand that.";
+  }
+  botMsg.innerText = message;
+  msgBox.appendChild(botMsg);
+  msgBox.scrollTop = msgBox.scrollHeight;
+}
+
 </script>
 
 </body>
 </html>
+
